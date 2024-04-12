@@ -1,0 +1,32 @@
+# PostgreSQL
+*.pgsql
+*.pgsql-journal
+*.psql
+*.psql-journal
+*.pid
+pgdata/
+
+# Ignore system and temporary files
+*.DS_Store
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.tmp
+*.swp
+
+# Virtual Environment
+.env
+env/
+venv/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+  flowise:
+    image: elestio/flowiseai:1.6.4
+    container_name: flowise
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: ${FLOWISE_PORT}
+      FLOWISE_USERNAME: ${FLOWISE_USERNAME}
+      FLOWISE_PASSWORD: ${FLOWISE_PASSWORD}
+
+      DATABASE_TYPE: ${DATABASE_TYPE}
+      DATABASE_PORT: ${POSTGRES_PORT}
+      DATABASE_HOST: ${POSTGRES_HOST}
+      DATABASE_NAME: ${POSTGRES_DB}
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${PORT}:3000
+    volumes:
+      - flowise:/root/.flowise
+    networks:
+      - flowise_network
+
+  postgres:
+    image: postgres:16.2-alpine3.19
+    container_name: postgres
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-q",
+          "-h",
+          "localhost",
+          "-U",
+          "${POSTGRES_USER}",
+          "-d",
+          "${POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - flowise_network
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DESIGN: "nette" # themes: https://github.com/vrana/adminer/tree/master/plugins
+    ports:
+      - 8080:8080
+    networks:
+      - flowise_network
+
+volumes:
+  postgres:
+  flowise:
+
+networks:
+  flowise_network:
