@@ -20,7 +20,7 @@ services:
       DATABASE_USER: ${POSTGRES_USER}
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - ${PORT}:3000
+      - ${FLOWISE_PORT}:3000
     volumes:
       - flowise:/root/.flowise
     networks:
